@@ -1,0 +1,15 @@
+- name: "Find library roots"
+  find:
+    paths: "{{ target_prefix }}"
+    patterns: '.libroot'
+    hidden: yes
+    recurse: yes
+  register: find_result
+
+- name: "Sync"
+  synchronize:
+    src: "{{ source_dir }}"
+    dest: "{{ item.path | dirname }}"
+    delete: yes
+    recursive: yes
+  with_items: "{{ find_result.files }}"
